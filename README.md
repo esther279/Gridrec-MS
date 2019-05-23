@@ -6,4 +6,4 @@ Please cite the following papers if using this/part of the code :)
 
 [2] Marone, F., and M. Stampanoni. "Regridding reconstruction algorithm for real-time tomographic imaging." Journal of synchrotron radiation 19.6 (2012): 1029-1037. https://doi.org/10.1107/S0909049512032864
 
-# Main function: tomo_syn_gridrec_ms.m
+# Main script: tomo_syn_gridrec_ms.m
