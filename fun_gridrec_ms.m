@@ -35,17 +35,7 @@ mask = complex(zeros(N_freq,N_freq, 'single')); %zeros(N_freq,N_freq);
 fprintf('----- Gridrec (N_layer = %d) -----\n', N_layer);
 for thetaIndex = 1:N_theta
     theta = angle_array(thetaIndex)/180*pi;
-
     if mod(thetaIndex,30)==0; fprintf('%.0f %%\n',thetaIndex/N_theta*100); end
-    %---- Testing different mask
-    cartesianGridInterpolatedFFT_old_old = cartesianGridInterpolatedFFT;
-    if mod(round(angle_array(thetaIndex)),90)==0
-        coeff = 1.0;
-        fprintf('theta %.2f deg, coeff %.2f\n',angle_array(thetaIndex), coeff);
-    else
-        coeff = 1.0;
-    end
-    %----
     
     for q = 1:N_freq % index for frequency        
         for n =  [1:N_layer]
@@ -66,8 +56,6 @@ for thetaIndex = 1:N_theta
             % To check the if conditions is not necessary anymore, since ... - 2*numberOfSupportNeighbours in ref (1)
             if kx_p_NN^2 + ky_p_NN^2 > (N_freq/2 - 2*numberOfSupportNeighbours)^2
                 continue
-            else
-                %fprintf('stopped\n');
             end
                                
             local_kx_range_min = kx_p_NN - numberOfSupportNeighbours;
@@ -94,20 +82,15 @@ for thetaIndex = 1:N_theta
             
             % multiplication with ramp filter numpy.abs(k) is an idealization and does not take discrete 
             % nature of FFT into account (See regridding paper by F. Marone)
-            
-            if 1 
-                if N_layer==1 
-                    contribution = sino_fft(n, q, thetaIndex)*weight*abs(k);            
-                else
-                    if distance ==0
-                        dd = 1;
-                    else
-                        dd = abs(distance);
-                    end
-                    contribution = sino_fft(n, q, thetaIndex)*weight*abs(1);     
-                end
+            if N_layer==1 
+                contribution = sino_fft(n, q, thetaIndex)*weight*abs(k);            
             else
-                contribution = zeros(size(weight)); 
+                if distance ==0
+                    dd = 1;
+                else
+                    dd = abs(distance);
+                end
+                contribution = sino_fft(n, q, thetaIndex)*weight*abs(1);     
             end
             
             if flag_use_interp1
@@ -127,8 +110,8 @@ for thetaIndex = 1:N_theta
             %mask_weight(rowIndex, columnIndex) = mask_weight(rowIndex, columnIndex) + weight;
             
             if N_layer>1 
-                mask = mask + coeff*(abs(cartesianGridInterpolatedFFT-cartesianGridInterpolatedFFT_old) > 1e-9); % increase val (now 0) will enhance the high frequencies      
-                if 0 %flag_plot_mask_anime
+                mask = mask + (abs(cartesianGridInterpolatedFFT-cartesianGridInterpolatedFFT_old) > 1e-9); % increase val (now 0) will enhance the high frequencies      
+                if flag_plot_mask_anime
                     figure(flag_plot_mask_anime); imagesc(mask); drawnow; 
                     %keyboard
                 end
