@@ -131,12 +131,7 @@ end
 % ---- Plot
 try
     figure(2)
-    subplot(2,3,1);
-    % imagesc((abs(img_recon_fine))); colorbar; axis equal tight xy
-    % st_title = sprintf(' Fine angles\n theta step %.1f deg \n iradon, filter %s\n (Q, rmse, res) = (%.3f, %.3f, %.3f)', delta, filter_type, Q_fine(1), Q_fine(2), Q_fine(3));
-    % title(st_title,'interpreter','none');
 
-    figure(2)
     subplot(2,3,2);
     imagesc((abs(img_recon_iradon))); colorbar; axis equal tight xy
     st_title = sprintf('== iradon ==\n theta step %d deg \n filter %s\n (Q, rmse, res) = (%.3f, %.3f, %.3f)', angle_step, filter_type, Q_0(1), Q_0(2), Q_0(3));

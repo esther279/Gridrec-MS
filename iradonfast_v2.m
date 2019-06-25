@@ -1,4 +1,4 @@
-function [img,H] = iradonfast_v2_angle_jamboree(varargin)
+function [img,H] = iradonfast_v2(varargin)
 %IRADON Inverse Radon transform.
 %   I = iradon(R,THETA) reconstructs the image I from projection data in the
 %   2-D array R.  The columns of R are parallel beam projection data.

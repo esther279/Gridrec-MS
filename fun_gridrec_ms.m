@@ -17,7 +17,7 @@ function [cartesianGridInterpolatedFFT, mask_use] = fun_gridrec_ms(sino_fft, ang
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 flag_use_interp1 = 0;       % can use 'interp1' instead of 'round', but it's slow
-flag_plot_mask_anime = 50;   % flag, as well as figure number
+flag_plot_mask_anime = 0;   % flag, as well as figure number
 
 N_theta = length(angle_array);
  
@@ -31,6 +31,7 @@ mask = complex(zeros(N_freq,N_freq, 'single')); %zeros(N_freq,N_freq);
 %[lookupTableOfConvolventInFourierSpace, numberOfSupportNeighbours, tblspcg] = fun_interpolation(C, N_freq);
 
 %% Gridrec
+%idx=1
 fprintf('----- Gridrec (N_layer = %d) -----\n', N_layer);
 for thetaIndex = 1:N_theta
     theta = angle_array(thetaIndex)/180*pi;
@@ -119,7 +120,7 @@ for thetaIndex = 1:N_theta
             
             rowIndex = ceil(ky + N_freq/2)+0;   % .astype(numpy.int) is floor in python
             columnIndex = ceil(kx + N_freq/2)+0;  
-            positions(idx,:) = [rowIndex(1)-1, columnIndex(1)-1];
+            %positions(idx,:) = [rowIndex(1)-1, columnIndex(1)-1];
             cartesianGridInterpolatedFFT_old = cartesianGridInterpolatedFFT;
             cartesianGridInterpolatedFFT(rowIndex, columnIndex) ...
                 = cartesianGridInterpolatedFFT(rowIndex, columnIndex) + filteredContribution;
@@ -132,6 +133,8 @@ for thetaIndex = 1:N_theta
                     %keyboard
                 end
             end
+            
+            %idx = idx+1
 
         end
          
@@ -173,7 +176,7 @@ if N_layer > 1
     mask_use = mask; %%
     cartesianGridInterpolatedFFT = cartesianGridInterpolatedFFT./mask_use;
 
-    figure(flag_plot_mask_anime+2); 
+    figure(99); 
     imagesc(log10(abs(cartesianGridInterpolatedFFT)));
     axis tight equal xy; colorbar; caxis([-2 4])
     set(gca,'fontsize',20,'fontweight','bold')
