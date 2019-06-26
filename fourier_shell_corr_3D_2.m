@@ -1,4 +1,5 @@
-% [FSC T r] = fourier_shell_corr_3D(img1,img2,dispfsc,SNRt)
+function [FSC T r n] = fourier_shell_corr_3D_2(img1,img2,dispfsc,SNRt,thickring) 
+% [FSC T r] = fourier_shell_corr_3D(img1,img2,dispfsc,SNRt,thickring) 
 % Computes the Fourier shell correlation between img1 and img2. It can also
 % compute the threshold function T. Images can be complex-valued.
 % Can handle non-cube arrays but assumes the voxel is isotropic
@@ -48,7 +49,6 @@
 %    of PSI or the authors. It is the user responsibility to ensure its
 %    proper use and the correctness of the results.
 
-function [FSC T r n] = fourier_shell_corr_3D_2(img1,img2,dispfsc,SNRt,thickring) 
 
 % A = 3;
 % img1 = rand(100,100,100);
