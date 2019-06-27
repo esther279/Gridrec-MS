@@ -72,9 +72,8 @@ position_range = [0 0 900 800]; FS = 15;
 Np = 256;               % phantom size
 
 N_layer = 13;           % 0 then no multi-slice
-use_gridrec = 1;        % 0 (iradon), 1 (both; gridrec slow)
 angle_step = 30;        % angular step for tomogram
-offset = 0; %0.95       % offset angle array by a little, can ignore
+offset = 0;             % offset angle array by a little, can ignore
 flag_normalize = 1;     % temporary
 
 filter_type = 'Ram-Lak';    % 'Ram-Lak', 'Hann', 'Hamming' , 'parzen' 
@@ -123,7 +122,7 @@ end
 angle_array_true = [0.05+offset:angle_step:179.999+offset];
 N_theta = length(angle_array_true);
 
-if numel(angle_array_true)==1 % just because iradonfast_v2 doesn't work for 1 angle
+if numel(angle_array_true)==1 % just because iradon might have problem for one angle
    angle_singleslice = [angle_array_true angle_array_true+0.01];
 else
    angle_singleslice = angle_array_true;
@@ -136,15 +135,21 @@ sino = fun_padarray_2D(sino, [pad_dim 0 0], [0 0 0 0]);
 N_freq = size(sino,1);
 
 %% === Calculate filters needed
-parzenFilter = parzenwin_2(N_freq, widthParam); 
+if widthParam<0
+    fprintf('parzenwin widthParam<0, no filtering\n');
+    parzenFilter = ones(N_freq, 1)
+else
+    fprintf('parzenwin with widthParam=2\n');
+    parzenFilter = parzenwin(N_freq) % using widParam=2
+
 alpha = N_theta/3.5; 
 [lookupTable, Nsupport, tblspcg] = fun_interpolation(C, N_freq);
 interpolationCorrectionMatrix = fun_interpolation_corr_matrix(C, lookupTable, alpha);
 
 
 %% === Single slice
-% ---- Using iradonfast_v2 ----
-img_recon_iradon = iradon(sino, angle_singleslice, filter_type); % Reconstruction
+% ---- Using iradon ----
+img_recon_iradon = iradon(sino, angle_singleslice, filter_type); 
 img_recon_iradon_fft = fftshift(fft2(ifftshift(img_recon_iradon)));
 [Q_0, img_recon_iradon, ~] = fun_calc_error(img_recon_iradon, img_phantom, param); % correlation, rmse, FSC resolution
 
@@ -164,12 +169,11 @@ subplot(2,3,2);
 imagesc((abs(img_recon_iradon))); colorbar; axis equal tight xy
 st_title = sprintf('== iradon ==\n theta step %d deg \n filter %s\n (Q, rmse, res) = (%.3f, %.3f, %.3f)', angle_step, filter_type, Q_0(1), Q_0(2), Q_0(3));
 title(st_title,'interpreter','none');
-if use_gridrec
-    subplot(2,3,3);
-    imagesc((abs(img_recon_gridrec))); colorbar; axis equal tight xy
-    st_title = sprintf('== Gridrec-Single ==\n interpolation C %d \n filter parzen %.1f\n (Q, rmse, res) = (%.3f, %.3f, %.3f)', C, widthParam, Q_1(1), Q_1(2), Q_1(3));
-    title(st_title,'interpreter','none');
-end
+
+subplot(2,3,3);
+imagesc((abs(img_recon_gridrec))); colorbar; axis equal tight xy
+st_title = sprintf('== Gridrec-Single ==\n interpolation C %d \n filter parzen %.1f\n (Q, rmse, res) = (%.3f, %.3f, %.3f)', C, widthParam, Q_1(1), Q_1(2), Q_1(3));
+title(st_title,'interpreter','none');
 set(gcf,'position',position_range,'color','w')
 
 
@@ -250,7 +254,7 @@ f1 = figure(1); clf; M=4; N=6;
 fig = 1;
 subplot(M,N,fig);
 imagesc((abs(img_recon_iradon))); colorbar; axis equal tight xy
-st_title = sprintf('== iradonfast_v2 ==\n single slice\n (Q, rmse, res) = (%.3f, %.3f, %.3f)', Q_0(1), Q_0(2), Q_0(3));
+st_title = sprintf('== iradon ==\n single slice\n (Q, rmse, res) = (%.3f, %.3f, %.3f)', Q_0(1), Q_0(2), Q_0(3));
 title(st_title,'interpreter','none');
 %
 subplot(M,N,fig+N);
@@ -292,7 +296,6 @@ st_title = sprintf('True Image\nNp=%d\nN_layer=%d', Np, N_layer);
 title(st_title,'interpreter','none','fontsize',15);
 
 % =======
-
 fig = 4;
 subplot(M,N,fig);
     plot(lookupTable,'b.'); grid on; axis tight
@@ -382,26 +385,20 @@ title('phase','interpreter','none');
 fig = 6;
 subplot(M,N,fig);
 imagesc((abs(img_recon_corr))); colorbar; axis equal tight xy; %caxis([0 500])
-if use_gridrec==0
-    title(sprintf('== irandon ==\nimg_recon_corr \n (Q, rmse, res) = (%.3f, %.3f, %.3f)', Q_recon_corr, Q_recon_corr(2), Q_recon_corr(3)),'interpreter','none');
-else
-    title(sprintf('== GridrecMS ==\nimg_recon_corr \n (Q, rmse, res) = (%.3f, %.3f, %.3f)', Q_recon_corr, Q_recon_corr(2), Q_recon_corr(3)),'interpreter','none');
-end
-if use_gridrec
-    subplot(M,N,fig+N);
-    surfc(((interpolationCorrectionMatrix)),'Edgecolor','none'); colorbar; %axis equal tight xy
-    title(sprintf('interpolationCorrectionMatrix \n (pi/2/C/alpha) = %.1f',pi/2/C/alpha),'interpreter','none');
+title(sprintf('== GridrecMS ==\nimg_recon_corr \n (Q, rmse, res) = (%.3f, %.3f, %.3f)', Q_recon_corr, Q_recon_corr(2), Q_recon_corr(3)),'interpreter','none');
 
-    subplot(M,N,fig+N*2);
-    imagesc(mask); colorbar; axis equal tight xy
-    title('mask','interpreter','none');
-end
+subplot(M,N,fig+N);
+surfc(((interpolationCorrectionMatrix)),'Edgecolor','none'); colorbar; %axis equal tight xy
+title(sprintf('interpolationCorrectionMatrix \n (pi/2/C/alpha) = %.1f',pi/2/C/alpha),'interpreter','none');
+
+subplot(M,N,fig+N*2);
+imagesc(mask); colorbar; axis equal tight xy
+title('mask','interpreter','none');
+
 
 % =======
 set(gcf,'position',[0 50 1800 1000],'color','w')
-
 toc
-
 
 
 %% === Save to png
