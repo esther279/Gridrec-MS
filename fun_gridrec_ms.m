@@ -1,11 +1,10 @@
 function [cartesianGridInterpolatedFFT, mask_use] = fun_gridrec_ms(sino_fft, angle_array, parzenFilter, lookupTableOfConvolventInFourierSpace, numberOfSupportNeighbours, tblspcg)
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2017-01-19
 %
-% Original: see gridRec.py from TOMCAT and 
-% F. Marone and M. Stampanoni, “Regridding reconstruction algorithm for 
-% real-time tomographic imaging,�? J.Synchrotron Radiat.19, 1029–1037 (2012)
+% This code is an extension based on gridRec.py from TOMCAT [1].
+% [1] Marone, F., and M. Stampanoni. "Regridding reconstruction algorithm 
+% for real-time tomographic imaging." Journal of synchrotron radiation 19.6 (2012): 1029-1037.
 %
 % Input
 %   - FFT of a sinogram, size(sino_fft) = [N_layer, N_freq, N_theta]
@@ -15,6 +14,42 @@ function [cartesianGridInterpolatedFFT, mask_use] = fun_gridrec_ms(sino_fft, ang
 %   - Inverse FFT of cartesianGridInterpolatedFFT will be the recon. image
 %   - mask is used instead of |k| when filling the Fourier space
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%*-----------------------------------------------------------------------*
+%|                                                                       |
+%|  Except where otherwise noted, this work is licensed under a          |
+%|  Creative Commons Attribution-NonCommercial-ShareAlike 4.0            |
+%|  International (CC BY-NC-SA 4.0) license.                             |
+%|                                                                       |
+%|  Copyright (c) 2017 by Paul Scherrer Institute (http://www.psi.ch)    |
+%|                                                                       |
+%|       Author: CXS group, PSI                                          |
+%*-----------------------------------------------------------------------*
+% You may use this code with the following provisions:
+%
+% If the code is fully or partially redistributed, or rewritten in another
+%   computing language this notice should be included in the redistribution.
+%
+% If this code, or subfunctions or parts of it, is used for research in a
+%   publication or if it is fully or partially rewritten for another
+%   computing language the authors and institution should be acknowledged
+%   in written form in the publication: “Data processing was carried out
+%   using the “cSAXS matlab package” developed by the CXS group,
+%   Paul Scherrer Institut, Switzerland.”
+%   Variations on the latter text can be incorporated upon discussion with
+%   the CXS group if needed to more specifically reflect the use of the package
+%   for the published work.
+%
+% A publication that focuses on describing features, or parameters, that
+%    are already existing in the code should be first discussed with the
+%    authors.
+%  
+% This code and subroutines are part of a continuous development, they
+%    are provided “as they are” without guarantees or liability on part
+%    of PSI or the authors. It is the user responsibility to ensure its
+%    proper use and the correctness of the results.
+
+
 
 flag_use_interp1 = 0;       % can use 'interp1' instead of 'round', but it's slow
 flag_plot_mask_anime = 0;   % flag, as well as figure number

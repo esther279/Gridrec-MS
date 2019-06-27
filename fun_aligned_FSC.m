@@ -1,4 +1,42 @@
 function resolution = fun_aligned_FSC(img1, img2, param)
+% resolution = fun_aligned_FSC(img1, img2, param)
+% Aligns images and computes the Fourier shell correlation
+% by calling the function 'fourier_shell_corr_3D_2'
+
+%*-----------------------------------------------------------------------*
+%|                                                                       |
+%|  Except where otherwise noted, this work is licensed under a          |
+%|  Creative Commons Attribution-NonCommercial-ShareAlike 4.0            |
+%|  International (CC BY-NC-SA 4.0) license.                             |
+%|                                                                       |
+%|  Copyright (c) 2017 by Paul Scherrer Institute (http://www.psi.ch)    |
+%|                                                                       |
+%|       Author: CXS group, PSI                                          |
+%*-----------------------------------------------------------------------*
+% You may use this code with the following provisions:
+%
+% If the code is fully or partially redistributed, or rewritten in another
+%   computing language this notice should be included in the redistribution.
+%
+% If this code, or subfunctions or parts of it, is used for research in a
+%   publication or if it is fully or partially rewritten for another
+%   computing language the authors and institution should be acknowledged
+%   in written form in the publication: “Data processing was carried out
+%   using the “cSAXS matlab package” developed by the CXS group,
+%   Paul Scherrer Institut, Switzerland.”
+%   Variations on the latter text can be incorporated upon discussion with
+%   the CXS group if needed to more specifically reflect the use of the package
+%   for the published work.
+%
+% A publication that focuses on describing features, or parameters, that
+%    are already existing in the code should be first discussed with the
+%    authors.
+%  
+% This code and subroutines are part of a continuous development, they
+%    are provided “as they are” without guarantees or liability on part
+%    of PSI or the authors. It is the user responsibility to ensure its
+%    proper use and the correctness of the results.
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -202,9 +240,6 @@ if 1
         catch
         resolution = [0 0];
     end
-    %st_title = sprintf('%s\n%s \n flipped_images %d, remove_ramp %d \n cropx [%d:%d], align %d, delta [%.3f, %.3f] \nPixel size %.2f nm\n FSC: taper %d, thickring %d, intersect (%.3f, %.3f) \n Resolution (%.2f, %.2f) nm', ...
-    %    file(1).filename, file(2).filename, flipped_images, remove_ramp, cropx(1), cropx(end),flag_alignment,total_delta(1), total_delta(2),pixel_size, taper, thickring, range_start, range(end), pixel_size/range_start, pixel_size/range(end))
-    %title(st_title,'interpreter','none')
 end
 
 % res_1  = resolution(1);
