@@ -138,11 +138,11 @@ N_freq = size(sino,1);
 %% === Calculate filters needed
 if widthParam<0
     fprintf('parzenwin widthParam<0, no filtering\n');
-    parzenFilter = ones(N_freq, 1)
+    parzenFilter = ones(N_freq, 1);
 else
     fprintf('parzenwin with widthParam=2\n');
-    parzenFilter = parzenwin(N_freq) % using widParam=2
-
+    parzenFilter = parzenwin(N_freq);  % this function assumes widParam=2
+end
 alpha = N_theta/3.5; 
 [lookupTable, Nsupport, tblspcg] = fun_interpolation(C, N_freq);
 interpolationCorrectionMatrix = fun_interpolation_corr_matrix(C, lookupTable, alpha);
