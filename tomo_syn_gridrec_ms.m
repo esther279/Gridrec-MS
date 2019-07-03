@@ -141,7 +141,7 @@ if widthParam<0
     parzenFilter = ones(N_freq, 1);
 else
     fprintf('parzenwin with widthParam=2\n');
-    parzenFilter = parzenwin(N_freq);  % this function assumes widParam=2
+    parzenFilter = parzenwin(N_freq);  % this function assumes widthParam=2
 end
 alpha = N_theta/3.5; 
 [lookupTable, Nsupport, tblspcg] = fun_interpolation(C, N_freq);
