@@ -1,18 +1,18 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% 2017-01-19
 %
-% This code is an extension based on gridRec.py from TOMCAT [1].
-% [1] Marone, F., and M. Stampanoni. "Regridding reconstruction algorithm 
-% for real-time tomographic imaging." Journal of synchrotron radiation 19.6 (2012): 1029-1037.
-%
-% Gridrec-MS [2]:
-% [2] Tsai, Esther HR, Federica Marone, and Manuel Guizar-Sicairos. 
+% Gridrec-MS [1]:
+% [1] Tsai, Esther HR, Federica Marone, and Manuel Guizar-Sicairos. 
 % "Gridrec-MS: an algorithm for multi-slice tomography." 
-% Optics letters 44.9 (2019): 2181-2184.
+% Optics Letters 44.9 (2019): 2181-2184.
+%
+% This code is an extension based on gridRec.py from TOMCAT [2].
+% [2] Marone, F., and M. Stampanoni. "Regridding reconstruction algorithm 
+% for real-time tomographic imaging." Journal of Synchrotron Radiation 19.6 (2012): 1029-1037.
+%
+% First version: 2017-Jan-19; Revision: 2019-Jan
 %
 % Main functions
 %   - fun_generate_sino_ms
-%   - parzenwin_2
 %   - fun_interpolation_corr_matrix
 %   - fun_gridrec_ms ***(the important one)
 %   - fun_ifft_image_corr
@@ -21,9 +21,10 @@
 % Note
 %   - FFT of a sinogram, size(sino_fft) = [N_layer, N_freq, N_theta]
 %   - C is for the interpolation from polar to Cartesian
-%   - parzenFilter is applied when filling the Fourier space
+%   - parzenFilter can be applied when filling the Fourier space
 %   - Inverse FFT of cartesianGridInterpolatedFFT will be the recon. image
 %   - mask is used instead of |k| when filling the Fourier space
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %*-----------------------------------------------------------------------*

@@ -48,7 +48,9 @@ function [cartesianGridInterpolatedFFT, mask_use] = fun_gridrec_ms(sino_fft, ang
 %    are provided “as they are” without guarantees or liability on part
 %    of PSI or the authors. It is the user responsibility to ensure its
 %    proper use and the correctness of the results.
-
+%
+%
+% This code is based on the python code written by TOMCAT group, PSI.
 
 
 flag_use_interp1 = 0;       % can use 'interp1' instead of 'round', but it's slow

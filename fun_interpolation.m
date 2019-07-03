@@ -34,6 +34,9 @@ function [lookupTableOfConvolventInFourierSpace, numberOfSupportNeighbours, tbls
 %    are provided “as they are” without guarantees or liability on part
 %    of PSI or the authors. It is the user responsibility to ensure its
 %    proper use and the correctness of the results.
+%
+%
+% This code is based on the python code written by TOMCAT group, PSI.
 
 
 %% paramters

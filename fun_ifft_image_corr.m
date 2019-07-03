@@ -34,6 +34,9 @@ function [img_recon_0,  img_recon_corr] = fun_ifft_image_corr(cartesianGridInter
 %    are provided “as they are” without guarantees or liability on part
 %    of PSI or the authors. It is the user responsibility to ensure its
 %    proper use and the correctness of the results.
+%
+%
+% This code is based on the python code written by TOMCAT group, PSI.
 
 
 % Invert FFT to get the recon. image
